@@ -1,4 +1,4 @@
-FROM debian:wheezy
+FROM ubuntu:xenial
 MAINTAINER WebpackContrib
 
 USER root
@@ -30,9 +30,8 @@ RUN JQ_URL=$(curl --location --fail --retry 3 https://api.github.com/repos/stedo
   && curl --silent --show-error --location --fail --retry 3 --output /usr/bin/jq $JQ_URL \
   && chmod +x /usr/bin/jq
 
-# Setup Java & Google Closure Compiler
+# Setup Oracle JDK 8
 # ...
-
 RUN \
   echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
   echo "deb http://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list && \
@@ -46,15 +45,16 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # Setup Google Closure Compiler
 # ...
-
 RUN \
   mkdir /usr/local/closure && \
-  wget http://dl.google.com/closure-compiler/compiler-latest.zip -O /usr/local/closure && \
+  wget wget http://dl.google.com/closure-compiler/compiler-latest.zip -O /usr/local/closure/compiler-latest.zip && \
   unzip /usr/local/closure/compiler-latest.zip -d /usr/local/closure && \
-  chmod 644 /usr/local/closure/compiler.jar && \
+  chmod 644 /usr/local/closure/closure-compiler-*.jar && \
   rm -f /usr/local/closure/compiler-latest.zip
 
-# Install Docker
+
+# Setup Install & Configure Docker
+# ...
 RUN set -ex \
   && export DOCKER_VERSION=$(curl --silent --fail --retry 3 https://download.docker.com/linux/static/stable/x86_64/ | grep -o -e 'docker-[.0-9]*-ce\.tgz' | sort -r | head -n 1) \
   && DOCKER_URL="https://download.docker.com/linux/static/stable/x86_64/${DOCKER_VERSION}" \
@@ -87,7 +87,6 @@ RUN groupadd --gid 3434 circleci \
 
 # Setup NVM Install Environment
 # ...
-
 USER circleci
 
 ENV NPM_CONFIG_LOGLEVEL info
