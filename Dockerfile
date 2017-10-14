@@ -45,16 +45,13 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # Setup Google Closure Compiler
 # ...
-RUN \
-  mkdir /usr/local/closure && \
-  wget wget http://dl.google.com/closure-compiler/compiler-latest.zip -O /usr/local/closure/compiler-latest.zip && \
-  unzip /usr/local/closure/compiler-latest.zip -d /usr/local/closure && \
-  chmod 644 /usr/local/closure/closure-compiler-*.jar && \
-  rm -f /usr/local/closure/compiler-latest.zip
+RUN mkdir /usr/local/closure
+RUN wget http://dl.google.com/closure-compiler/compiler-latest.zip -O /usr/local/closure/compiler-latest.zip
+RUN unzip /usr/local/closure/compiler-latest.zip -d /usr/local/closure 
+RUN chmod 644 /usr/local/closure/closure-compiler-*.jar
+RUN rm -f /usr/local/closure/compiler-latest.zip
 
-
-# Setup Install & Configure Docker
-# ...
+# Install Docker
 RUN set -ex \
   && export DOCKER_VERSION=$(curl --silent --fail --retry 3 https://download.docker.com/linux/static/stable/x86_64/ | grep -o -e 'docker-[.0-9]*-ce\.tgz' | sort -r | head -n 1) \
   && DOCKER_URL="https://download.docker.com/linux/static/stable/x86_64/${DOCKER_VERSION}" \
