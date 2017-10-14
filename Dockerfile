@@ -15,7 +15,7 @@ RUN apt-get update \
   && apt-get install -y  -q --no-install-recommends \
     git mercurial xvfb \
     locales sudo openssh-client ca-certificates tar gzip parallel \
-    net-tools netcat unzip zip bzip2 apt-transport-https software-properties-common build-essential libssl-dev \
+    net-tools netcat unzip zip bzip2 apt-transport-https software-properties-common python-software-properties build-essential libssl-dev \
     curl g++ gcc git make wget && rm -rf /var/lib/apt/lists/* && apt-get -y autoclean
 
 # Set timezone to UTC by default
